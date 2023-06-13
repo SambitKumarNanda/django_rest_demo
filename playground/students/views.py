@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import StudentDetailModel
+from .serializers import StudentDetailModelCreateSerializer, StudentDetailModelListSerializer
 from rest_framework import views, status
 from rest_framework.response import Response
 
@@ -56,3 +57,21 @@ class SingleStudentDetailModelReadView(views.APIView):
     def delete(self, request, id):
         StudentDetailModel.objects.get(id=id).delete()
         return Response({"message": "query was deleted"}, status=status.HTTP_200_OK)
+
+
+class StudentDetailModelReadRestAPIView(views.APIView):
+    def get(self, request):
+        queryset = StudentDetailModel.objects.all()
+        serializer = StudentDetailModelListSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = StudentDetailModelCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "data Added successfully"})
+        else:
+            return Response(serializer.errors, status=status.HTTP_200_OK)
+
+
+    def
