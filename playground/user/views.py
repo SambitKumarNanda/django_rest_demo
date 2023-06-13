@@ -14,7 +14,14 @@ data = {
 
 
 def dummy_api(request):
-    return JsonResponse(data)
+    if request.method == "POST":
+        pass
+    if request.method == "PUT":
+        pass
+    if request.method == "DELETE":
+        pass
+    else:
+        return JsonResponse(data)
 
 
 class DummyRestAPIView(views.APIView):
