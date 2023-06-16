@@ -1,7 +1,24 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework import views, status
+from rest_framework import views, status, generics
+from .serializer import StudentUserRegistrationSerializer
+from django.contrib.auth import get_user_model
+
+
+class StudentUserRegistrationGenericAPIView(generics.GenericAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = StudentUserRegistrationSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "user registration"}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Create your views here.
 
